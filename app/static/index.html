@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>智能养护助手</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="app-card" aria-labelledby="page-title">
+    <header class="page-header">
+      <div>
+        <h1 id="page-title">智能养护助手</h1>
+        <p>养护工程交底参考工具</p>
+      </div>
+      <a id="api-docs-link" class="text-link" href="http://127.0.0.1:8000/docs" target="_blank" rel="noreferrer">查看接口文档</a>
+    </header>
+
+    <nav class="steps" aria-label="操作步骤">
+      <div class="step is-active" data-step="recognition"><span>1</span>工程识别</div>
+      <div class="step" data-step="confirmation"><span>2</span>类型确认</div>
+      <div class="step" data-step="output"><span>3</span>内容输出</div>
+      <div class="step" data-step="report"><span>4</span>问题上报</div>
+    </nav>
+
+    <section id="recognition-view" class="view is-active" aria-labelledby="recognition-title">
+      <div class="view-heading">
+        <h2 id="recognition-title">工程识别</h2>
+        <p>描述现场施工内容，系统将识别一个或多个工程类型。</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-label">识别模型</div>
+        <div class="form-control">
+          <div class="segmented" role="radiogroup" aria-label="识别模型">
+            <label><input type="radio" name="recognition-model" value="local"><span>本地模型</span></label>
+            <label><input type="radio" name="recognition-model" value="api" checked><span>在线 API</span></label>
+          </div>
+          <p class="field-help">后端已配置千问3-8B在线API；当前页面仍用于界面流程验证。</p>
+        </div>
+      </div>
+
+      <div class="form-row form-row-top">
+        <label class="form-label" for="employee-input">施工描述</label>
+        <div class="form-control">
+          <textarea id="employee-input" class="textarea-large" rows="4" placeholder="例如：对路面坑槽进行挖补，并重新铺筑沥青面层。"></textarea>
+        </div>
+      </div>
+
+      <div class="form-row form-row-actions">
+        <div class="form-label" aria-hidden="true"></div>
+        <div class="form-control action-row action-row-left">
+          <button id="match-button" class="button button-primary" type="button">识别工程类型</button>
+        </div>
+      </div>
+      <p id="recognition-status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="confirmation-view" class="view" aria-labelledby="confirmation-title" hidden>
+      <div class="view-heading">
+        <h2 id="confirmation-title">确认工程类型</h2>
+        <p id="confirmation-description">请根据现场情况选择最符合的标准工程类型。</p>
+      </div>
+
+      <div class="summary-bar">
+        <span>原始描述</span>
+        <strong id="original-description">—</strong>
+        <em id="recognition-provider-badge" class="neutral-badge">在线 API 识别</em>
+      </div>
+
+      <div id="candidate-list" class="candidate-list"></div>
+
+      <div id="fallback-loading" class="fallback-loading" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <div>
+          <strong>本地数据库暂无匹配工程类型</strong>
+          <p>正在自动调用网络搜索兜底，请稍候...</p>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <button id="back-to-recognition" class="button button-secondary" type="button">返回修改</button>
+        <button id="confirm-button" class="button button-primary" type="button">确认选择</button>
+      </div>
+    </section>
+
+    <section id="output-view" class="view" aria-labelledby="output-title" hidden>
+      <div class="view-heading output-heading">
+        <div>
+          <h2 id="output-title">交底参考内容</h2>
+          <p>根据已确认工程类型返回参考内容。</p>
+        </div>
+        <span id="source-badge" class="source-badge">本地知识库</span>
+      </div>
+
+      <div id="network-warning" class="alert alert-warning" hidden>
+        当前知识库无匹配工程类型，以下数据来源于网络，请结合企业制度、现场情况及现行标准注意分辨。
+      </div>
+
+      <div class="form-row output-model-row">
+        <div class="form-label">输出模型</div>
+        <div class="form-control output-model-control">
+          <div class="segmented" role="radiogroup" aria-label="输出模型">
+            <label><input type="radio" name="output-model" value="local"><span>本地模型</span></label>
+            <label><input type="radio" name="output-model" value="api" checked><span>在线 API</span></label>
+          </div>
+          <button id="regenerate-button" class="button button-secondary" type="button">重新整理</button>
+        </div>
+      </div>
+
+      <article class="output-card">
+        <div class="output-meta">
+          <span id="confirmed-type-tag" class="type-tag">—</span>
+          <span id="output-provider-text">由在线 API 整理</span>
+        </div>
+        <div id="output-content" class="output-content"></div>
+      </article>
+
+      <div class="footer-actions">
+        <button id="restart-button" class="button button-secondary" type="button">重新识别</button>
+        <button id="report-button" class="button button-primary" type="button" hidden>问题上报</button>
+      </div>
+    </section>
+
+    <section id="report-view" class="view" aria-labelledby="report-title" hidden>
+      <div class="view-heading">
+        <h2 id="report-title">问题上报</h2>
+        <p>提交当前缺失工程类型，供业务人员后续补充知识库。</p>
+      </div>
+
+      <div class="form-row form-row-top">
+        <label class="form-label" for="site-situation">现场工程情况</label>
+        <div class="form-control">
+          <textarea id="site-situation" rows="3" placeholder="请输入现场工程情况"></textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="missing-type">缺失工程类型</label>
+        <div class="form-control">
+          <input id="missing-type" type="text" placeholder="请输入缺失的工程类型">
+        </div>
+      </div>
+
+      <div class="form-row form-row-top">
+        <label class="form-label" for="issue-description">补充描述</label>
+        <div class="form-control">
+          <textarea id="issue-description" rows="3" placeholder="请输入需要补充说明的内容"></textarea>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <button id="cancel-report" class="button button-secondary" type="button">取消</button>
+        <button id="submit-report" class="button button-primary" type="button">确认上报</button>
+      </div>
+      <p id="report-status" class="status status-right" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>

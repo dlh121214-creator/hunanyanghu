@@ -1,0 +1,44 @@
+[
+  {
+    "type_id": "ROAD_POTHOLE_REPAIR",
+    "type_name": "坑槽修补",
+    "aliases": ["坑槽挖补", "坑槽维修", "坑洞修补", "路面挖补"],
+    "keywords": ["坑槽", "坑洞", "挖补"],
+    "enabled": true
+  },
+  {
+    "type_id": "ASPHALT_PAVING",
+    "type_name": "沥青混凝土摊铺",
+    "aliases": ["沥青摊铺", "铺筑沥青面层", "重新铺筑沥青"],
+    "keywords": ["沥青", "摊铺", "面层", "铺筑"],
+    "enabled": true
+  },
+  {
+    "type_id": "PAVEMENT_CRACK_TREATMENT",
+    "type_name": "路面裂缝处治",
+    "aliases": ["裂缝处治", "灌缝", "裂缝修补"],
+    "keywords": ["裂缝", "灌缝", "修补"],
+    "enabled": true
+  },
+  {
+    "type_id": "TRAFFIC_ORGANIZATION",
+    "type_name": "施工交通组织",
+    "aliases": ["交通组织", "半幅通车", "交通导改"],
+    "keywords": ["交通", "半幅通车", "导改", "封道"],
+    "enabled": true
+  },
+  {
+    "type_id": "GUARDRAIL_REPAIR",
+    "type_name": "波形梁护栏维修",
+    "aliases": ["护栏维修", "波形护栏更换", "护栏更换"],
+    "keywords": ["护栏", "波形梁", "更换", "维修"],
+    "enabled": true
+  },
+  {
+    "type_id": "MARKING_MAINTENANCE",
+    "type_name": "道路标线养护",
+    "aliases": ["标线恢复", "重新划线", "交通标线施工"],
+    "keywords": ["标线", "划线", "恢复"],
+    "enabled": true
+  }
+]

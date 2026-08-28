@@ -1,0 +1,19 @@
+[project]
+name = "hunan-maintenance-agent"
+version = "0.1.0"
+description = "湖南养护工程施工交底参考系统智能体服务"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.136,<1",
+  "httpx>=0.28,<1",
+  "pydantic>=2.13,<3",
+  "uvicorn>=0.44,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9,<10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+

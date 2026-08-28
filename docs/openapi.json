@@ -1,0 +1,1057 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "湖南养护工程施工交底参考系统智能体服务",
+    "description": "工程类型识别、候选确认、知识检索、多工程整理和问题上报接口。所有业务接口统一位于 /api/v1。",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "系统"
+        ],
+        "summary": "服务健康检查",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/system/capabilities": {
+      "get": {
+        "tags": [
+          "系统"
+        ],
+        "summary": "获取当前服务能力和开关",
+        "description": "返回可公开的运行配置，不返回API密钥和内部地址。",
+        "operationId": "get_capabilities_api_v1_system_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilitiesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/intent/match": {
+      "post": {
+        "tags": [
+          "意图识别"
+        ],
+        "summary": "识别工程并返回标准标签候选",
+        "description": "调用8B判断模型识别单个或多个工程，再通过关键词匹配为每个工程返回匹配度最高的标准工程标签。匹配度由关键词规则产生，不是模型置信度。",
+        "operationId": "match_intent_api_v1_intent_match_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntentMatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntentMatchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/intent/confirm": {
+      "post": {
+        "tags": [
+          "意图识别"
+        ],
+        "summary": "确认工程类型候选",
+        "description": "员工必须为每个工程分组选择一个候选标准标签，或明确选择网络搜索兜底。不能提交候选列表之外的标准标签。",
+        "operationId": "confirm_intent_api_v1_intent_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntentConfirmRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntentConfirmResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/issues/report": {
+      "post": {
+        "tags": [
+          "问题上报"
+        ],
+        "summary": "上报缺失工程类型",
+        "description": "记录员工提交的缺失工程类型，供后续业务人员处理。",
+        "operationId": "report_issue_api_v1_issues_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssueReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueReportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/knowledge/retrieve": {
+      "post": {
+        "tags": [
+          "知识检索"
+        ],
+        "summary": "检索已确认工程的养护内容",
+        "description": "根据当前请求中员工已确认的工程类型查询知识内容。当前开发阶段使用Mock提供者；单工程返回direct，多工程返回compose。无本地内容时标记为需要网络兜底。",
+        "operationId": "retrieve_knowledge_api_v1_knowledge_retrieve_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KnowledgeRetrieveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeRetrieveResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/output/compose": {
+      "post": {
+        "tags": [
+          "内容输出"
+        ],
+        "summary": "整理多个工程的综合内容",
+        "description": "读取当前请求最近一次知识检索结果。只有至少两项有效工程内容时调用8B模型；结果未通过工程类型、来源及受保护内容校验时，自动降级为分工程展示。",
+        "operationId": "compose_output_api_v1_output_compose_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComposeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComposeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CapabilitiesResponse": {
+        "properties": {
+          "top_k": {
+            "type": "integer",
+            "title": "Top K"
+          },
+          "match_threshold": {
+            "type": "integer",
+            "title": "Match Threshold"
+          },
+          "judge_model_provider": {
+            "type": "string",
+            "title": "Judge Model Provider"
+          },
+          "compose_model_provider": {
+            "type": "string",
+            "title": "Compose Model Provider"
+          },
+          "knowledge_provider": {
+            "type": "string",
+            "title": "Knowledge Provider"
+          },
+          "network_search_enabled": {
+            "type": "boolean",
+            "title": "Network Search Enabled"
+          },
+          "network_search_provider": {
+            "type": "string",
+            "title": "Network Search Provider"
+          },
+          "multi_project_compose_enabled": {
+            "type": "boolean",
+            "title": "Multi Project Compose Enabled"
+          },
+          "issue_report_enabled": {
+            "type": "boolean",
+            "title": "Issue Report Enabled"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "top_k",
+          "match_threshold",
+          "judge_model_provider",
+          "compose_model_provider",
+          "knowledge_provider",
+          "network_search_enabled",
+          "network_search_provider",
+          "multi_project_compose_enabled",
+          "issue_report_enabled"
+        ],
+        "title": "CapabilitiesResponse"
+      },
+      "ComposeRequest": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id"
+        ],
+        "title": "ComposeRequest"
+      },
+      "ComposeResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "output_mode": {
+            "type": "string",
+            "enum": [
+              "composed",
+              "separate"
+            ],
+            "title": "Output Mode"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "contains_external_content": {
+            "type": "boolean",
+            "title": "Contains External Content"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "validation_errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Validation Errors"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "status",
+          "output_mode",
+          "contains_external_content"
+        ],
+        "title": "ComposeResponse"
+      },
+      "ConfirmedEngineeringType": {
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "title": "Group Id"
+          },
+          "type_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type Id"
+          },
+          "type_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type Name"
+          },
+          "use_network_fallback": {
+            "type": "boolean",
+            "title": "Use Network Fallback",
+            "default": false
+          },
+          "search_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Query"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "group_id"
+        ],
+        "title": "ConfirmedEngineeringType"
+      },
+      "EngineeringCandidateGroup": {
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "title": "Group Id"
+          },
+          "engineering_description": {
+            "type": "string",
+            "title": "Engineering Description"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/MatchCandidate"
+            },
+            "type": "array",
+            "title": "Candidates"
+          },
+          "network_fallback_required": {
+            "type": "boolean",
+            "title": "Network Fallback Required"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "group_id",
+          "engineering_description",
+          "candidates",
+          "network_fallback_required"
+        ],
+        "title": "EngineeringCandidateGroup"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "service",
+          "version",
+          "environment"
+        ],
+        "title": "HealthResponse"
+      },
+      "IntentConfirmRequest": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Request Id"
+          },
+          "selections": {
+            "items": {
+              "$ref": "#/components/schemas/IntentSelection"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Selections"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "selections"
+        ],
+        "title": "IntentConfirmRequest"
+      },
+      "IntentConfirmResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "confirmed_types": {
+            "items": {
+              "$ref": "#/components/schemas/ConfirmedEngineeringType"
+            },
+            "type": "array",
+            "title": "Confirmed Types"
+          },
+          "next_action": {
+            "type": "string",
+            "enum": [
+              "retrieve",
+              "network_fallback",
+              "mixed_retrieve"
+            ],
+            "title": "Next Action"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "confirmed_types",
+          "next_action"
+        ],
+        "title": "IntentConfirmResponse"
+      },
+      "IntentMatchRequest": {
+        "properties": {
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "employee_input": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Employee Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "employee_input"
+        ],
+        "title": "IntentMatchRequest"
+      },
+      "IntentMatchResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "top_k": {
+            "type": "integer",
+            "title": "Top K"
+          },
+          "match_threshold": {
+            "type": "integer",
+            "title": "Match Threshold"
+          },
+          "engineering_groups": {
+            "items": {
+              "$ref": "#/components/schemas/EngineeringCandidateGroup"
+            },
+            "type": "array",
+            "title": "Engineering Groups"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "top_k",
+          "match_threshold",
+          "engineering_groups"
+        ],
+        "title": "IntentMatchResponse"
+      },
+      "IntentSelection": {
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Group Id"
+          },
+          "type_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type Id"
+          },
+          "use_network_fallback": {
+            "type": "boolean",
+            "title": "Use Network Fallback",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "group_id"
+        ],
+        "title": "IntentSelection"
+      },
+      "IssueReportRequest": {
+        "properties": {
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "issue_type": {
+            "type": "string",
+            "const": "missing_engineering_type",
+            "title": "Issue Type",
+            "default": "missing_engineering_type"
+          },
+          "missing_type_name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Missing Type Name"
+          },
+          "employee_description": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Employee Description"
+          },
+          "original_input": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "missing_type_name",
+          "employee_description"
+        ],
+        "title": "IssueReportRequest"
+      },
+      "IssueReportResponse": {
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "title": "Report Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "pending",
+            "title": "Status",
+            "default": "pending"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "message"
+        ],
+        "title": "IssueReportResponse"
+      },
+      "KnowledgeItem": {
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "title": "Document Id"
+          },
+          "group_id": {
+            "type": "string",
+            "title": "Group Id"
+          },
+          "type_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type Id"
+          },
+          "type_name": {
+            "type": "string",
+            "title": "Type Name"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "local",
+              "network"
+            ],
+            "title": "Source Type"
+          },
+          "source_name": {
+            "type": "string",
+            "title": "Source Name"
+          },
+          "source_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Version"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document_id",
+          "group_id",
+          "type_name",
+          "title",
+          "content",
+          "source_type",
+          "source_name"
+        ],
+        "title": "KnowledgeItem"
+      },
+      "KnowledgeRetrieveRequest": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Request Id"
+          },
+          "allow_network_fallback": {
+            "type": "boolean",
+            "title": "Allow Network Fallback",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id"
+        ],
+        "title": "KnowledgeRetrieveRequest"
+      },
+      "KnowledgeRetrieveResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "fallback_required"
+            ],
+            "title": "Status"
+          },
+          "output_mode": {
+            "type": "string",
+            "enum": [
+              "direct",
+              "compose",
+              "unavailable"
+            ],
+            "title": "Output Mode"
+          },
+          "contains_external_content": {
+            "type": "boolean",
+            "title": "Contains External Content"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "missing_items": {
+            "items": {
+              "$ref": "#/components/schemas/MissingKnowledgeItem"
+            },
+            "type": "array",
+            "title": "Missing Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "status",
+          "output_mode",
+          "contains_external_content",
+          "items",
+          "missing_items"
+        ],
+        "title": "KnowledgeRetrieveResponse"
+      },
+      "MatchCandidate": {
+        "properties": {
+          "type_id": {
+            "type": "string",
+            "title": "Type Id"
+          },
+          "type_name": {
+            "type": "string",
+            "title": "Type Name"
+          },
+          "match_score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Match Score"
+          },
+          "above_threshold": {
+            "type": "boolean",
+            "title": "Above Threshold"
+          },
+          "matched_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Matched Keywords"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type_id",
+          "type_name",
+          "match_score",
+          "above_threshold"
+        ],
+        "title": "MatchCandidate"
+      },
+      "MissingKnowledgeItem": {
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "title": "Group Id"
+          },
+          "type_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type Id"
+          },
+          "type_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type Name"
+          },
+          "search_query": {
+            "type": "string",
+            "title": "Search Query"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "group_id",
+          "search_query",
+          "reason"
+        ],
+        "title": "MissingKnowledgeItem"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

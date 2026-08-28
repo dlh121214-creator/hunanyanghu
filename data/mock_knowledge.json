@@ -1,0 +1,42 @@
+[
+  {
+    "document_id": "mock_doc_001",
+    "type_id": "ROAD_POTHOLE_REPAIR",
+    "title": "坑槽修补养护信息（Mock）",
+    "content": "【模拟数据】坑槽修补固定养护内容，用于验证接口流程，不能作为正式施工交底依据。",
+    "source_name": "开发阶段模拟知识库",
+    "source_version": "mock-1.0"
+  },
+  {
+    "document_id": "mock_doc_002",
+    "type_id": "ASPHALT_PAVING",
+    "title": "沥青混凝土摊铺养护信息（Mock）",
+    "content": "【模拟数据】沥青混凝土摊铺固定养护内容，用于验证多工程整理流程。",
+    "source_name": "开发阶段模拟知识库",
+    "source_version": "mock-1.0"
+  },
+  {
+    "document_id": "mock_doc_003",
+    "type_id": "PAVEMENT_CRACK_TREATMENT",
+    "title": "路面裂缝处治养护信息（Mock）",
+    "content": "【模拟数据】路面裂缝处治固定养护内容，仅用于开发测试。",
+    "source_name": "开发阶段模拟知识库",
+    "source_version": "mock-1.0"
+  },
+  {
+    "document_id": "mock_doc_004",
+    "type_id": "TRAFFIC_ORGANIZATION",
+    "title": "施工交通组织养护信息（Mock）",
+    "content": "【模拟数据】施工交通组织固定内容，仅用于开发测试。",
+    "source_name": "开发阶段模拟知识库",
+    "source_version": "mock-1.0"
+  },
+  {
+    "document_id": "mock_doc_005",
+    "type_id": "GUARDRAIL_REPAIR",
+    "title": "波形梁护栏维修养护信息（Mock）",
+    "content": "【模拟数据】波形梁护栏维修固定养护内容，仅用于开发测试。",
+    "source_name": "开发阶段模拟知识库",
+    "source_version": "mock-1.0"
+  }
+]
